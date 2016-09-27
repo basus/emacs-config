@@ -1,85 +1,4 @@
-;; Markdown setup
-(autoload 'markdown-mode "markdown-mode"
-   "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.markdown" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.mdwn" . markdown-mode))
-
-;; XML setup
-(add-to-list 'auto-mode-alist '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
-
-;; Org-mode setup
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(add-hook 'org-mode-hook 'turn-on-font-lock)
-(add-hook 'org-mode-hook 'turn-on-auto-fill)
-
-;; Ruby mode
-(autoload 'ruby-mode "ruby-mode" "Ruby Mode" t)
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-(add-hook 'ruby-mode-hook
-          (lambda()
-            (add-hook 'local-write-file-hooks
-                      '(lambda()
-                         (save-excursion
-                           (untabify (point-min) (point-max))
-                           (delete-trailing-whitespace)
-                           )))
-            (set (make-local-variable 'indent-tabs-mode) 'nil)
-            (set (make-local-variable 'tab-width) 2)
-            (imenu-add-to-menubar "IMENU")
-            (define-key ruby-mode-map (kbd "RET") 'newline-and-indent)
-            (require 'ruby-electric)
-            (ruby-electric-mode t)
-            ))
-
-;; Python setup
-(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-m" 'newline-and-indent)))
-(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\t" 'python-indent-line)))
-(add-hook 'python-mode-hook 'hs-minor-mode)
-(setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
-(autoload 'python-mode "python" "Python editing mode." t)
-
-;; JavaScript setup
-(autoload 'js2-mode' "js2" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(setq js2-bounce-indent-p t)
-(setq inferior-js-program-command "node")
-(add-hook 'js2-mode-hook '(lambda ()
-			    (local-set-key "\C-x\C-e" 'js-send-last-sexp)
-			    (local-set-key "\C-\M-x" 'js-send-last-sexp-and-go)
-			    (local-set-key "\C-cb" 'js-send-buffer)
-			    (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
-			    (local-set-key "\C-cl" 'js-load-file-and-go)
-                (setq autopair-dont-activate t)
-			    ))
-
-;; JS Comint mode
-(setq inferior-js-program-command "node-repl")
-
-;; Slime setup
-(setq inferior-lisp-program "sbcl")
-(require 'slime-autoloads)
-(slime-setup)
-(add-to-list 'auto-mode-alist '("\\.lisp$" . slime-mode))
-(add-hook 'slime-mode-hook 'lisp-mode)
-
-;; C setup
-(defun linux-c-mode ()
-  "C mode with adjusted defaults for use with the Linux kernel."
-  (interactive)
-  (c-mode)
-  (c-set-style "K&R")
-  (setq c-basic-offset 8))
-
-;; C++ setup
-(defun cpp-mode ()
-  "C++ mode adjusted for indentation and style"
-  (interactive)
-  (c++-mode)
-  (c-set-style "K&R")
-  (setq c-basic-offset 8))
-
-(add-to-list 'auto-mode-alist '("\\.cpp$" . cpp-mode))
-
+;; Mode-specific settings
 
 ;; Ibuffer groupings
 (setq ibuffer-saved-filter-groups
@@ -103,36 +22,67 @@
               ("Makefiles" (or
                             (mode . GNUmakefile)
                             (filename . "\\Makefile*")))
+              ("Data" (or
+                       (filename . "\\.data\\(<[0-9]+>\\)?$")))
               ("Elisp" (or
                         (mode . emacs-lisp-mode)))
+              ("GNU plot" (or
+                           (name . "\\.gp\\(<[0-9]+>\\)?$")
+                           (name . "\\.gnu\\(<[0-9]+>\\)?$")))
               ("Haskell" (or
                           (mode . haskell-mode)
                           (name . "\\.hs$")))
               ("HTML" (or
                        (name . "\\.html")
-                       (name . "\\.css$")
-                       (name . "\\.markdown$")))
+                       (name . "\\.css")))
+              ("Java" (or
+                             (name . "\\.java")
+                             (name . "\\.class$")))
               ("JavaScript" (or
                              (name . "\\.js$")
                              (name . "\\.pjs$")))
               ("PHP" (or
                       (name . "\\.php$")
                       (mode . php-mode)))
+              ("OCaml" (or
+                     (name . "\\.ml[ily]?\\(<[0-9]+>\\)?$")
+                     (name . "_tags\\(<[0-9]+>\\)?$")
+                     (name . "_oasis\\(<[0-9]+>\\)?$")
+                     ))
               ("Org" (or
                       (mode . org-mode)))
+              ("Pollen" (or
+                         (mode . pollen-mode)
+                         (name . "\\.pm$")))
               ("Processing" (or
                              (name . "\\.pde$")))
+              ("Racket" (or
+                         (name . "\\.rkt$")
+                         (mode . Scheme)
+                         (name . "\\* Racket REPL \\*")))
+              ("Restructured Text" (or
+                                    (name . "\\.rst$")))
               ("Ruby" (or
                        (mode . Ruby)
                        (name . "\\.rb$")))
+              ("Shell Script" (or
+                               (name . "\\.sh\\(<[0-9]+>\\)?$")))
               ("Shells" (or
                          (mode . shell-mode)))
-              ("Latex" (or
-                        (mode . LaTeX)
-                        (name . "\\.tex$")
-                        (name . "\*tex-")))
+              ("LaTeX" (or
+                        (mode . latex-mode)
+                        (mode . tex-mode)
+                        (mode . bibtex-mode)
+                        (mode . TeX-output-mode)
+                        (name . "\\.tex")
+                        (name . "\*tex-")
+                        (name . "\\.cls$")))
               ("Magit" (or
                         (name . "\*magit")))
+              ("Markdown" (or
+                           (name . "\\.markdown$")
+                           (name . "\\.md$")
+                           (name . "\\.mdwn$")))
               ("Mode events" (or
                              (name . "\\*Pymacs\\*")
                              (name . "\\*slime-events\\*")))
@@ -141,8 +91,7 @@
                         (name . "\\*Messages\\*")
                         (name . "\\*Completions\\*")
                         (name . "\\*GNU")))
-              ("ML" (or
-                     (name . "\\.ml[ily]?$")))))))
+              ))))
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
@@ -150,47 +99,56 @@
             (setq ibuffer-show-empty-filter-groups nil)
             (ibuffer-auto-mode 1)))
 
-;; Shell mode
-(ansi-color-for-comint-mode-on)
+;; Enable evil-aware paredit in Lisp-related modes
+(add-hook 'geiser-mode-hook 'evil-paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
 
-;; Processing mode
-(autoload 'processing-mode "processing-mode" "Processing mode" t)
-(add-to-list 'auto-mode-alist '("\\.pde$" . processing-mode))
-(setq processing-location "~/processing/")
+;; Custom C style
+(defun custom-c-setup ()
+  (setq c-default-style "linux")
+  (setq c-electric-pound-behavior (quote (alignleft)))
+  (c-set-offset 'substatement-open 0)   ; body of "if" in java/c
+  (c-set-offset 'inline-open 0)         ; body of function in java
+  (setq c-continued-statement-offset 4) ; multi-line statement
+  (setq c-tab-always-indent t)          ; TAB always indents
+  (setq c-brace-offset 0)               ; no effect afaik
+  (setq c-basic-offset 4)
+  (setq c-brace-imaginary-offset 0)
+  (setq c-argdecl-indent 0)
+  (setq c-label-indent 2)
+  (setq c-label-offset 9)
+  (setq indent-tabs-mode nil)
+  (modify-syntax-entry ?_ "w" c-mode-syntax-table)
+  (local-set-key "\C-\\\C-e" 'wrap-define)
+  (auto-fill-mode nil)
+)
 
-;; Smalltalk mode
-(autoload 'smalltalk-mode "smalltalk-mode" "Smalltalk mode" t)
+(add-hook 'c-mode-common-hook 'custom-c-setup)
 
-;; BNF mode
-(autoload 'bnf-mode "bnf-mode" "Backus-Naur form mode" t)
-(add-to-list 'auto-mode-alist '("\\.bnf$" . bnf-mode))
+;; Insert a ◊ (lozenge) for use with pollen
+(add-hook 'pollen-mode-hook
+          (lambda () (key-chord-define evil-insert-state-map "zz"
+                                       (lambda () (interactive)
+                                         (insert (decode-char 'ucs 9674))))))
 
-;; Standard ML setup
-(autoload 'sml-mode "sml-mode" "Major mode for editing SML" t)
-(autoload 'run-sml "sml-proc" "Run an inferior SML process" t)
-(add-to-list 'auto-mode-alist '("\\.\\(sml\\|sig\\)\\'" . sml-mode))
+;; Eclim mode for interaction with Eclipse
+(global-eclim-mode)
 
-;; Tuareg mode for OCaml
-(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
-(autoload 'camldebug "camldebug" "Run the Caml debugger" t)
-(autoload 'tuareg-imenu-set-imenu "tuareg-imenu" 
-  "Configuration of imenu for tuareg" t)
-(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
-(setq auto-mode-alist
-      (append '(("\\.ml[ily]?$" . tuareg-mode)
-                ("\\.topml$" . tuareg-mode))
-              auto-mode-alist))
-;; Haskell
-(autoload 'haskell-mode "haskell-mode" "Haskell Mode" t)
-(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+;; Pylint support via flymake
+(when (load "flymake" t)
+  (defun flymake-pylint-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "epylint" (list local-file))))
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pylint-init)))
 
-;; Prolog setup
-(setq prolog-system 'gnu)
-(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
-(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
-(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
-(setq auto-mode-alist (append '(("\\.pl$" . prolog-mode)
-                                ("\\.m$" . mercury-mode))
-                               auto-mode-alist))
+;; LaTeX related configuration
+(add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+;; Org-mode disable visual line mode so that indenting works properly
+(remove-hook 'org-mode-hook 'visual-line-mode)
