@@ -1,43 +1,53 @@
-;; General movement and editing
-(global-set-key (kbd "M-<left>") 'other-window-backward)
-(global-set-key (kbd "M-<right>") 'other-window)
-(global-set-key (kbd "\M-<") 'beginning-of-buffer)
-(global-set-key (kbd "\M->") 'end-of-buffer)
+;; Window movement commands, prefixed with C-w
+(defhydra hydra-window ()
+   "Window Control Commands"
+   ( "|"   split-window-right)
+   ( "-"   split-window-below )
+   ( "+"   balance-windows )
+   ( "d"   delete-window )
+   ( "D"   delete-other-windows )
+   ( "o"   other-window)
+   ( "O"   other-window-backward)
+   )
+(general-define-key
+ :states '(normal visual insert emacs motion)
+ "C-w" 'hydra-window/body)
 
-;; Character based actions
-(global-set-key "\M-f" 'forward-char)
-(global-set-key "\M-b" 'backward-char)
-(global-set-key "\M-d" 'delete-char)
-(global-set-key "\M-w" 'backward-delete-char)
+;; Commands and actions involving multiple buffers
+(general-define-key
+ :prefix "C-c"
+ "b"   '(ivy-switch-buffer          :which-key "buffers")
+ "B"   '(ibuffer                    :which-key "iBuffer")
+ "f"   '(counsel-find-file          :which-key "files"  )
+ "r"   '(counsel-recentf            :which-key "recent" )
+ "g"   '(magit-status               :which-key "Magit"  )
+ "k"   '(kill-buffer                :which-key "kill buffer")
 
-;; Word based actions
-(global-set-key "\C-f" 'forward-word)
-(global-set-key (kbd "C-<right>") 'forward-word)
-(global-set-key "\C-b" 'backward-word)
-(global-set-key (kbd "C-<left>") 'backward-word)
-(global-set-key "\C-w" 'backward-kill-word)
-(global-set-key "\C-d" 'kill-word)
+ ;; Complex operations, or ones that shouldn't be triggered by accident
+ "C-e" '(save-buffers-kill-terminal :which-key "exit")
+ )
 
-;; Editing actions
-(global-set-key "\C-x\C-k" 'kill-region)
-(global-set-key "\C-x\C-l" 'kill-ring-save)
-(global-set-key "\C-v" 'yank-pop)
-(global-set-key "\M-r" 'replace-string)
-(global-set-key "\M-l" 'wrap)
-(global-set-key "\M-c" 'compile)
+;; Operations within a buffer
+(general-define-key
+ :prefix "C-x"
+ "a"  '(align-regexp           :which-key "align")
+ "e"  '(next-error             :which-key "next error")
+ "k"  '(kill-region            :which-key "cut")
+ "c"  '(kill-ring-save         :which-key "copy")
+ "s"  '(counsel-grep-or-swiper :which-key "search forward" )
+ "S"  '(swiper                 :which-key "search backward")
+ "r"  '(replace-string         :which-key "replace string")
+ "R"  '(replace-regex          :which-key "replace regex")
+
+ ;; More complex operations
+ "C-s" '(save-buffer :which-key "save buffer")
+ "C-c" '(compile     :which-key "compile")
+)
 
 ;; Indenting actions
 (global-set-key (kbd "RET") 'newline-and-indent)
-(global-set-key "\C-i" (lambda () (interactive) (insert "    ")))
 (global-set-key (kbd "TAB") 'indent-according-to-mode)
-(global-set-key (kbd "C-x a r") 'align-regexp)
 
-;; Repositioning Buffer in window
-(global-set-key "\C-mp" 'line-to-top)
-(global-set-key "\C-mw" 'scroll-n-lines-behind)
-(global-set-key "\C-ms" 'scroll-n-lines-ahead)
-(global-set-key "\C-ma" 'point-to-top)
-(global-set-key "\C-md" 'point-to-bottom)
-
-;; UI actions
-(global-set-key [f11] 'toggle-fullscreen)
+;; Return to normal state from evil's insert state
+(key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
+(key-chord-mode 1)
