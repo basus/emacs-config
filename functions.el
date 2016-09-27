@@ -1,3 +1,4 @@
+
 ;; Word wrapping by window size
 (defun wrap ()
   "Wrap lines by window size"
@@ -63,6 +64,11 @@
       (replace-string "\n" "")
       (forward-char))))
 
+;; Connect slime automatically on new lisp file
+(defun start-slime ()
+  (unless (slime-connected-p)
+    (save-excursion (slime))))
+
 ;; Toggle fullscreen
 (defun toggle-fullscreen (&optional f)
   (interactive)
@@ -72,3 +78,43 @@
                              (if (boundp 'old-fullscreen) old-fullscreen nil)
                            (progn (setq old-fullscreen current-value)
                                   'fullboth)))))
+
+;; Date and time insertion functions
+(setq insert-date-format "%Y-%m-%d %a")
+(setq insert-time-format "%H:%M:%S %Z")
+
+(defun insert-date ()
+  "Inserts current date at point"
+  (interactive "*")
+  (insert (format-time-string insert-date-format)))
+
+(defun insert-time ()
+  "Inserts current time at point"
+  (interactive "*")
+  (insert (format-time-string insert-time-format)))
+
+(defun insert-date-time ()
+  "Inserts date and time combination at current point"
+  (interactive "*")
+  (insert-date) (insert " ") (insert-time))
+
+(defun backward-kill-line (arg)
+  "Kill ARG lines backward."
+  (interactive "p")
+  (kill-line (- 1 arg)))
+
+(defun center-body ()
+  (interactive)
+  (linum-mode -1)
+  (let* ((max-text-width 100)
+         (margin (max 0 (/ (- (window-width) max-text-width) 2))))
+    (setq-local left-margin-width margin)
+    (setq-local right-margin-width margin)
+    (set-window-buffer nil (current-buffer))))
+
+(defun uncenter-body ()
+  (interactive)
+  (setq-local left-margin-width 0)
+  (setq-local right-margin-width 0)
+  (set-window-buffer nil (current-buffer)))
+
