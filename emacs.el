@@ -28,8 +28,9 @@
  coding-system-for-read     'utf-8
  coding-system-for-write    'utf-8
  confirm-kill-emacs         'y-or-n-p
+ magic-mode-alist           '()
  initial-major-mode         'fundamental-mode
-)
+)c
 
 ;; Default behaviors
 (setq-default

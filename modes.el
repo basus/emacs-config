@@ -150,5 +150,5 @@
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 
-;; Org-mode disable visual line mode so that indenting works properly
-(remove-hook 'org-mode-hook 'visual-line-mode)
+;; Use HTML mode instead of HTML-helper-mode
+(add-to-list 'auto-mode-alist '("\\.html$" . html-mode))
