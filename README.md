@@ -1,20 +1,19 @@
 # Public emacs configuration
 
-This is not really the emacs configuration I use. My real emacs configuration
-imports lots of other Emacs code for working with various languages, web
-services and code management systems. This code is only my custom-emacs code:
-elisp functions, keybindings and mode tweaks.
+This my personal Emacs configuration, composed mostly of elisp functions,
+keybindings, various packages (installed
+using [package.el](http://www.wikemacs.org/wiki/Package.el)) and mode tweaks.
 
-## A note on keybindings
+This configuration makes heavy use of the following:
 
-Most of my keybindings are pretty different from the standard Emacs ones. I
-rebound them to be easier for me to remember, especially the movement
-keybindings. In particular the `f` key moves forward, the `b` key moves
-backward, the `w` key kills backwards and the `d` key kills forwards. The Ctrl
-modifiers makes each of the above operate by word and the Alt or Meta modifier
-makes them work by letter. Ctrl-m is now a prefix key for various functions to
-reposition the current open buffer in the window. The functions are defined in
-`functions.el`.
+  1. [`use-package`](https://github.com/jwiegley/use-package) for managing
+     various package installations and configurations
+  2. [`general.el`](https://github.com/noctuid/general.el) for key
+     configurations
+
+Note that the key configurations are rather rough and often changing, and should
+probably not be imported wholesale. There are also a set of customizations
+applied only to [Aquamacs](http://aquamacs.org) on OS X.
 
 ## Acknowledgements
 
@@ -24,3 +23,7 @@ posts. So did some of the code. The relevant blog posts are:
   - [Steve Yegge's .emacs file](https://sites.google.com/site/steveyegge2/my-dot-emacs-file)
   - [Effective Emacs](https://sites.google.com/site/steveyegge2/effective-emacs)
   - [Emergency Elisp](http://steve-yegge.blogspot.com/2008/01/emergency-elisp.html)
+
+The current general structure of the configuration, as well as the heavy use of
+`use-package` and `general.el` is based on a guide on
+[how to build your own Spacemacs](https://sam217pa.github.io/2016/09/02/how-to-build-your-own-spacemacs/).
