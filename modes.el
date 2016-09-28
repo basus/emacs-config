@@ -130,6 +130,7 @@
           (lambda () (key-chord-define evil-insert-state-map "zz"
                                        (lambda () (interactive)
                                          (insert (decode-char 'ucs 9674))))))
+(add-to-list 'auto-mode-alist '("\\.pm$" . pollen-mode))
 
 ;; Eclim mode for interaction with Eclipse
 (global-eclim-mode)

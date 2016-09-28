@@ -159,6 +159,10 @@
   :load-path (lambda () ( concat ( opam-share ) "/emacs/site-lisp") )
 )
 
+;; Pollen mode for my personal website
+(use-package pollen-mode :ensure f :defer t
+  :commands pollen-mode)
+
 ;; Python mode
 (use-package python-mode :ensure t :defer t)
 
